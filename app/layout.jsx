@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Nav from "@/components/Nav";
 import Provider from "@/components/Provider";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Next.js Demo by TechnoTipsToday",
   description: "Demo of the Next.js Concepts by Sam",
 };

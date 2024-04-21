@@ -2,9 +2,7 @@ import { cookies } from 'next/headers';
 
 function CookiesList() {
     const cookieStore = cookies();
-    console.log("cookieStore:", cookieStore);
     const hasCookie = cookieStore.has('theme');
-    console.log("hasCookie:", hasCookie);
 
     return (
         <div className="max-w-lg mx-auto mt-8">
@@ -16,8 +14,8 @@ function CookiesList() {
                 </div>
             ))}
             <div className="mt-4">
-                <p className="text-lg">Does it have a cookie named 'theme'?</p>
-                <p className="text-xl font-bold text-indigo-600">{hasCookie ? 'Yes' : 'No'}</p>
+                <p className="text-lg">Does it have a cookie named (theme)?</p>
+                <p className="text-xl font-bold text-indigo-600">{hasCookie ? `Yes` : `No`}</p>
             </div>
         </div>
     );

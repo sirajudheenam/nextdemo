@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 
 import Form from "@/components/Form";
 
-const CreatePrompt = () => {
+const CreatePost = () => {
     const router = useRouter();
     const { data: session } = useSession();
 
     const [submitting, setIsSubmitting] = useState(false);
     const [post, setPost] = useState({ title: "", body: "", tag: "" });
 
-    const createPrompt = async (e) => {
+    const createPost = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
@@ -44,9 +44,9 @@ const CreatePrompt = () => {
             post={post}
             setPost={setPost}
             submitting={submitting}
-            handleSubmit={createPrompt}
+            handleSubmit={createPost}
         />
     );
 };
 
-export default CreatePrompt;
+export default CreatePost;

@@ -34,13 +34,14 @@ const UpdatePost = () => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        if (!postId) return alert("Missing PromptId!");
+        if (!postId) return alert("Missing PostId!");
 
         try {
-            const response = await fetch(`/api/prompt/${postId}`, {
+            const response = await fetch(`/api/post/${postId}`, {
                 method: "PATCH",
                 body: JSON.stringify({
-                    prompt: post.prompt,
+                    title: post.title,
+                    body: post.body,
                     tag: post.tag,
                 }),
             });

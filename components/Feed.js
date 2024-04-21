@@ -8,7 +8,7 @@ export const PostCardList = ({ data, handleTagClick }) => {
     // data && console.log("data: ", data);
     return (
         data && (
-            <div className='mt-16 prompt_layout'>
+            <div className='mt-16 post_layout'>
                 {data.map((post) => (
                     <Suspense key={post._id}>
                         <PostCard
@@ -85,7 +85,7 @@ const Feed = () => {
                 />
             </form>
 
-            {/* All Prompts */}
+            {/* All Posts */}
             {searchText ? (
                 <PostCardList
                     data={searchedResults}

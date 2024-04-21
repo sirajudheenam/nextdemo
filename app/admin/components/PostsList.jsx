@@ -149,7 +149,7 @@ const PostsList = () => {
                 }
                 const data = await response.json();
                 console.log("data:", data);
-                setPosts(data); // Corrected typo: setPosts instead of setPrompts
+                setPosts(data);
             } catch (error) {
                 console.log("Error fetching posts:", error);
             }

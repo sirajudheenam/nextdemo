@@ -7,7 +7,7 @@ import PostCard from "./PostCard";
 export const PostCardList = ({ data, handleTagClick }) => {
     return (
         data && (
-            <div className='mt-16 prompt_layout'>
+            <div className='mt-16 post_layout'>
                 {data.map((post) => (
                     <Suspense key={post._id}>
                         <PostCard
@@ -39,7 +39,7 @@ const FeedByUser = ({ id }) => {
         if (id) fetchPosts(id);
     }, [id]);
 
-    const filterPrompts = (searchtext) => {
+    const filterPosts = (searchtext) => {
         const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
         return allPosts.filter(
             (item) =>
@@ -57,7 +57,7 @@ const FeedByUser = ({ id }) => {
         // debounce method
         setSearchTimeout(
             setTimeout(() => {
-                const searchResult = filterPrompts(e.target.value);
+                const searchResult = filterPosts(e.target.value);
                 setSearchedResults(searchResult);
             }, 500)
         );
@@ -66,7 +66,7 @@ const FeedByUser = ({ id }) => {
     const handleTagClick = (tagName) => {
         setSearchText(tagName);
 
-        const searchResult = filterPrompts(tagName);
+        const searchResult = filterPosts(tagName);
         setSearchedResults(searchResult);
     };
 
@@ -83,7 +83,7 @@ const FeedByUser = ({ id }) => {
                 />
             </form>
 
-            {/* All Prompts */}
+            {/* All Posts */}
             {searchText ? (
                 <PostCardList
                     data={searchedResults}

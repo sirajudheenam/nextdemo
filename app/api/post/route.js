@@ -1,10 +1,10 @@
 import Post from "@/models/post";
 import { connectToDB } from "@/utils/database";
 
-// The problem is with how Vercel deals with the '/api/prompt' 
+// The problem is with how Vercel deals with the '/api/post' 
 // route in ISR, and it doesn't update properly. To fix this,
 //  we want to move it out of ISR. To do that, just add 'revalidate=0' 
-//  inside the '/api/prompt/route.js' file like this:
+//  inside the '/api/post/route.js' file like this:
 
 export const revalidate = 0;
 

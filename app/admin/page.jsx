@@ -10,6 +10,8 @@ export default function AdminPage() {
             <div className="mb-8">
                 <h1 className="text-3xl font-bold mb-4">Admin</h1>
                 <a href="/admin/posts" className="text-blue-500 underline">Manage Posts</a>
+                <br />
+                <a href="/admin/todos" className="text-blue-500 underline">Manage Todos</a>
             </div>
 
             {/* Cookies List */}
@@ -24,7 +26,7 @@ export default function AdminPage() {
                     ))}
                 </div>
                 <div className="mt-4">
-                    <p className="text-lg">Does it have a cookie named 'theme'?</p>
+                    <p className="text-lg">Does it have a cookie named `theme`?</p>
                     <p className="text-xl font-bold text-indigo-600">{hasCookie ? 'Yes' : 'No'}</p>
                 </div>
             </div>

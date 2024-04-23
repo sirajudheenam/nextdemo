@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 function PostsMenu() {
-    const [postBulkData, setPostBulkData] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
     //fetch data from JSONPlaceholder API
@@ -13,18 +13,18 @@ function PostsMenu() {
                 console.error('Failed to fetch posts from /api/json/posts');
             }
             const data = await response.json();
-            setPostBulkData(data);
+            setPosts(data);
         } catch (error) {
             console.error('Error seeding database:', error);
         }
 
     };
 
-    const insertBulkPosts = async function () {
+    const seedPosts = async function () {
         try {
             const response = await fetch('/api/db/posts', {
                 method: 'POST',
-                body: JSON.stringify({ postBulkData: postBulkData }),
+                body: JSON.stringify({ posts: posts }),
             });
 
             if (!response.ok) {
@@ -48,12 +48,14 @@ function PostsMenu() {
     const confirmDeleteAllPosts = async () => {
         try {
             // make a fetch call to delete all posts
-            const response = await fetch('/api/db/posts');
+            const response = await fetch('/api/db/posts', {
+                method: 'DELETE'
+            });
             if (!response.ok) {
                 console.error('Failed to delete posts');
             }
             const data = await response.json();
-            console.log("Deleting all posts...");
+            console.log("Deleted all posts...");
             // Reset confirmation state
             setIsConfirmationOpen(false);
         } catch (error) {
@@ -75,7 +77,7 @@ function PostsMenu() {
             <h1 className="text-3xl font-bold mb-4 text-center">Bulk Data Operations</h1>
             <div className="flex flex-col gap-4 items-center">
                 <button
-                    onClick={() => insertBulkPosts()}
+                    onClick={() => seedPosts()}
                     className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-4 rounded transition-colors duration-300 ease-in-out"
                 >
                     Seed Posts

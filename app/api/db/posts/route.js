@@ -19,7 +19,7 @@ export const POST = async (req) => {
 
     try {
         await connectToDB();
-        await Post.insertMany(postBulkData);
+        await Post.insertMany(posts);
         return new Response(JSON.stringify({ message: 'Posts seeded successfully' }), { status: 200 });
 
     } catch (error) {

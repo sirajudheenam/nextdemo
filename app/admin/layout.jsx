@@ -1,8 +1,10 @@
+import Notification from '@/app/admin/components/Notification';
 
+const message = "New Message Arrived";
 export default function layout({ children }) {
     return (
         <>
-            <h1>From Layout </h1>
+            <Notification message={message} />
             <div>{children}</div>
         </>
     );

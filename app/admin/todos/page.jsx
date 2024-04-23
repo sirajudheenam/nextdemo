@@ -1,13 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
-
+import ConfirmationDialog from '@/app/admin/components/ConfirmationDialog';
 export default function Page() {
     const [todos, setTodos] = useState([]);
     const [todosFromJSON, setTodosFromJSON] = useState([]);
     const [todosFromDB, setTodosFromDB] = useState([]);
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [isFetchFirst, setIsFetchFirst] = useState(false);
 
     const todosSizeinDB = todosFromDB.length;
+    const todosFromDBEmpty = todosSizeinDB > 0 ? false : true;
 
     const fetchTodosFromJSON = async () => {
         try {
@@ -37,7 +39,12 @@ export default function Page() {
     };
 
     const seedTodosToDB = async () => {
+        if (!todosFromDBEmpty) {
+            console.log('Todos already seeded to DB');
+            return;
+        }
         try {
+            (todosFromJSON.length < 1) && await fetchTodosFromJSON();
             const resp = await fetch('/api/db/todos', {
                 method: 'POST',
                 body: JSON.stringify(todosFromJSON),
@@ -59,7 +66,7 @@ export default function Page() {
 
     const deleteAllTodosFromDB = () => {
         // Open confirmation dialog
-        setIsConfirmationOpen(true);
+        setIsDeleteConfirmationOpen(true);
     };
 
     const confirmDeleteAllTodosFromDB = async () => {
@@ -75,7 +82,7 @@ export default function Page() {
             // For demonstration, you can clear the todos array state
             setTodosFromDB([]);
             // Closes confirmation dialog
-            setIsConfirmationOpen(false);
+            setIsDeleteConfirmationOpen(false);
             return todosResp;
 
         } catch (error) {
@@ -85,10 +92,11 @@ export default function Page() {
 
     const cancelDeleteAllTodosFromDB = () => {
         // Cancel deletion
-        setIsConfirmationOpen(false);
+        setIsDeleteConfirmationOpen(false);
     };
 
     useEffect(() => {
+        fetchTodosFromJSON();
         fetchTodosFromDB();
     }, []);
 
@@ -115,7 +123,7 @@ export default function Page() {
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
                     onClick={fetchTodosFromDB}
                 >
-                    Fetch All Todos from DB
+                    Fetch All ToDos from DB
                 </button>
 
                 <button
@@ -131,26 +139,14 @@ export default function Page() {
             </div>
 
             {/* Confirmation Dialog */}
-            {isConfirmationOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <p className="text-lg font-semibold mb-4">Are you sure you want to delete all posts?</p>
-                        <div className="flex justify-center">
-                            <button
-                                onClick={confirmDeleteAllTodosFromDB}
-                                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-4"
-                            >
-                                Yes, Delete All
-                            </button>
-                            <button
-                                onClick={cancelDeleteAllTodosFromDB}
-                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>)}
+            {isDeleteConfirmationOpen && (
+                <ConfirmationDialog
+                    dialogTitle={"Are you sure you want to delete all posts?"}
+                    labelFirstButton={"Yes, Delete All"}
+                    labelSecondButton={"Cancel"}
+                    handleClickFirst={confirmDeleteAllTodosFromDB}
+                    handleClickSecond={cancelDeleteAllTodosFromDB} />
+            )}
             {/* todosFromJSON List  */}
             {/* <div className="max-w-lg mx-auto mt-8">
                 <h2 className="text-2xl font-bold mb-4">Todos List from JSON</h2>

@@ -1,8 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import ConfirmationDialog from '@/app/admin/components/ConfirmationDialog';
+import { useSession } from 'next-auth/react';
+
 export default function Page() {
-    const [todos, setTodos] = useState([]);
+    // const todosLocalStore = window?.localStorage?.getItem("todosLocal") ? JSON.parse(localStorage.getItem("todosLocal")) : null;
+    // console.log("todosLocalStore", todosLocalStore);
+
+    const { data: session } = useSession();
+
     const [todosFromJSON, setTodosFromJSON] = useState([]);
     const [todosFromDB, setTodosFromDB] = useState([]);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
@@ -17,8 +23,9 @@ export default function Page() {
             if (!response.ok) {
                 throw new Error('Failed to fetch todos from JSONPlaceholder');
             }
-            const resp = await response.json();
-            setTodosFromJSON(resp);
+            const data = await response.json();
+            console.log("Todos from JSON", data);
+            setTodosFromJSON(data);
         } catch (error) {
             console.error('Error fetching todos from JSON:', error);
         }
@@ -39,25 +46,43 @@ export default function Page() {
     };
 
     const seedTodosToDB = async () => {
-        if (!todosFromDBEmpty) {
-            console.log('Todos already seeded to DB');
-            return;
-        }
+        // const todos = Array.from(todosFromJSON);
+
+        // todos.forEach(object => {
+        //     object.executor = session?.user?.email;
+        // });
+        // console.log("Todos to be seeded [updated]", todos);
+        const todos = [
+            {
+                title: "title",
+                completed: false,
+                userId: 1,
+                executor: session?.user?.email
+
+            }
+        ];
+        [1, 2, 4, 5, 6].forEach((i) => {
+            todos.push({
+                title: `title ${i}`,
+                completed: false,
+                userId: i,
+                executor: session?.user?.email
+            });
+        });
         try {
-            (todosFromJSON.length < 1) && await fetchTodosFromJSON();
             const resp = await fetch('/api/db/todos', {
                 method: 'POST',
-                body: JSON.stringify(todosFromJSON),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                body: JSON.stringify({ todos: todos }),
             });
+            console.log("resp:", resp);
             if (!resp.ok) {
                 throw new Error('Error seeding Todos to the database');
             }
-            const todosResp = await resp.json();
-            setTodosFromDB(todosResp);
-            return todosResp;
+            const data = await response.json();
+            console.log("After seeding Todos Response", data);// Database seeded successfully
+            if (resp.ok) {
+                router.push("/admin/todos");
+            }
         } catch (err) {
             console.error('Error seeding Todos to the database:', err);
             return { err: err.message };
@@ -100,6 +125,7 @@ export default function Page() {
         fetchTodosFromDB();
     }, []);
 
+
     return (
         <>
             <h1 className="text-3xl font-bold mb-4">ToDos Operations</h1>
@@ -141,7 +167,7 @@ export default function Page() {
             {/* Confirmation Dialog */}
             {isDeleteConfirmationOpen && (
                 <ConfirmationDialog
-                    dialogTitle={"Are you sure you want to delete all posts?"}
+                    dialogTitle={"Are you sure you want to delete all todos?"}
                     labelFirstButton={"Yes, Delete All"}
                     labelSecondButton={"Cancel"}
                     handleClickFirst={confirmDeleteAllTodosFromDB}

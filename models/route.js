@@ -45,7 +45,7 @@ export const DELETE = async (request, { params }) => {
         await connectToDB();
 
         // Find the Post by ID and remove it
-        await Post.findByIdAndRemove(params.id);
+        await Post.findByIdAndDelete(params.id);
 
         return new Response("Post deleted successfully", { status: 200 });
     } catch (error) {

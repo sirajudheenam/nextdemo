@@ -23,11 +23,6 @@ export const PATCH = async (request, { params }) => {
     const { title, body, tag } = await request.json();
     const { id } = params;
 
-    // console.log("id:", id);
-    // console.log("title:", title);
-    // console.log("body:", body);
-    // console.log("tag:", tag);
-
     try {
         await connectToDB();
         // Find the existing post by ID
@@ -41,9 +36,6 @@ export const PATCH = async (request, { params }) => {
         existintPost.title = title;
         existintPost.body = body;
         existintPost.tag = tag;
-
-        // console.log("existintPost");
-        // console.log(existintPost);
 
         await existintPost.save();
 

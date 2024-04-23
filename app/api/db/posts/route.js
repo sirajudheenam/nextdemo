@@ -15,8 +15,9 @@ export const GET = async (request) => {
 };
 
 export const POST = async (req) => {
+    console.log("Request POST", req);
     const { posts } = await req.json();
-
+    console.log("POSTs received in API", typeof posts);
     try {
         await connectToDB();
         await Post.insertMany(posts);

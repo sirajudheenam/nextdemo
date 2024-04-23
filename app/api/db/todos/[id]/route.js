@@ -5,7 +5,8 @@ export const GET = async (request, { params }) => {
     const { id } = params;
     try {
         await connectToDB();
-        const todo = await Todo.find({ _id: id }); // Fetch all users from the database
+        // const todo = await Todo.find({ _id: id }); // This will return an Array
+        const todo = await Todo.findById(id); // This returns an Object with Todo
         return new Response(JSON.stringify(todo), { status: 200 });
     } catch (error) {
         return new Response(`Failed to fetch user ${id}`, { status: 500 });
@@ -13,7 +14,7 @@ export const GET = async (request, { params }) => {
 };
 
 export const PATCH = async (request, { params }) => {
-    const { todo, tag } = await request.json();
+    const { todo } = await request.json();
 
     try {
         await connectToDB();
@@ -42,7 +43,7 @@ export const DELETE = async (request, { params }) => {
         await connectToDB();
 
         // Find the Todo by ID and remove it
-        await Todo.findByIdAndRemove(params.id);
+        await Todo.findByIdAndDelete(params.id);
 
         return new Response(`Todo with id # ${params.id} deleted successfully`, { status: 200 });
     } catch (error) {

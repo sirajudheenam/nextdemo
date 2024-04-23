@@ -40,6 +40,9 @@ const Nav = () => {
             <div className='sm:flex hidden'>
                 {session?.user ? (
                     <div className='flex gap-3 md:gap-5'>
+                        <Link href='/todos/create-todo' className='black_btn'>
+                            Create Todo
+                        </Link>
                         <Link href='/posts/create-post' className='black_btn'>
                             Create Post
                         </Link>
@@ -100,11 +103,18 @@ const Nav = () => {
                                     My Profile
                                 </Link>
                                 <Link
-                                    href='/posts/create-post'
+                                    href='/todos/create-post'
                                     className='dropdown_link'
                                     onClick={() => setToggleDropdown(false)}
                                 >
                                     Create Post
+                                </Link>
+                                <Link
+                                    href='/todos/create-todo'
+                                    className='dropdown_link'
+                                    onClick={() => setToggleDropdown(false)}
+                                >
+                                    Create Todo
                                 </Link>
                                 <button
                                     type='button'

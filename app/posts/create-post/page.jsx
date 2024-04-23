@@ -10,6 +10,10 @@ const CreatePost = () => {
     const router = useRouter();
     const { data: session } = useSession();
 
+    console.log("session");
+    console.log(session);
+
+    console.log(session?.user.id);
     const [submitting, setIsSubmitting] = useState(false);
     const [post, setPost] = useState({ title: "", body: "", tag: "" });
 
@@ -18,7 +22,7 @@ const CreatePost = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch("/api/post/new", {
+            const response = await fetch("/api/db/posts/new", {
                 method: "POST",
                 body: JSON.stringify({
                     title: post.title,

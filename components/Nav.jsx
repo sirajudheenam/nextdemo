@@ -29,7 +29,9 @@ const Nav = () => {
                     width={30}
                     height={30}
                     className='object-contain'
-                    priority={false}
+                    // Image with src "/assets/images/logo.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold.
+                    // Read more: https://nextjs.org/docs/api-reference/next/image#priority
+                    priority={true}
                 />
                 <p className='logo_text'>NextDemo</p>
             </Link>
@@ -38,7 +40,7 @@ const Nav = () => {
             <div className='sm:flex hidden'>
                 {session?.user ? (
                     <div className='flex gap-3 md:gap-5'>
-                        <Link href='/create-post' className='black_btn'>
+                        <Link href='/posts/create-post' className='black_btn'>
                             Create Post
                         </Link>
 
@@ -98,7 +100,7 @@ const Nav = () => {
                                     My Profile
                                 </Link>
                                 <Link
-                                    href='/create-post'
+                                    href='/posts/create-post'
                                     className='dropdown_link'
                                     onClick={() => setToggleDropdown(false)}
                                 >

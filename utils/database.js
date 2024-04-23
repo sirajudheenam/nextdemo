@@ -17,14 +17,17 @@ export const connectToDB = async () => {
     // [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated 
     // option: useUnifiedTopology has no effect since Node.js 
     // Driver version 4.0.0 and will be removed in the next major version
+
+
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
-            dbName: "nextdemo",
+            // dbName: "nextdemo",
+            dbName: process.env.MONGODB_NAME,
         });
 
         isConnected = true;
 
-        console.log('MongoDB connected');
+        console.log(`MongoDB connected, current DB is: ${process.env.MONGODB_NAME} `);
     } catch (error) {
         console.log(error);
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-
+import Loading from '@/components/Loading';
 import PostCard from "./PostCard";
 
 export const PostCardList = ({ data, handleTagClick }) => {
@@ -9,7 +9,7 @@ export const PostCardList = ({ data, handleTagClick }) => {
         data && (
             <div className='mt-16 post_layout'>
                 {data.map((post) => (
-                    <Suspense key={post._id}>
+                    <Suspense key={post._id} fallback={<Loading />} >
                         <PostCard
                             key={post._id}
                             post={post}
@@ -21,7 +21,7 @@ export const PostCardList = ({ data, handleTagClick }) => {
     );
 };
 
-const FeedByUser = ({ id }) => {
+const PostsFeed = () => {
     const [allPosts, setAllPosts] = useState([]);
 
     // Search states
@@ -29,15 +29,16 @@ const FeedByUser = ({ id }) => {
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [searchedResults, setSearchedResults] = useState([]);
 
-    const fetchPosts = async (id) => {
-        const response = await fetch(`/api/users/${id}/posts`);
-        const postData = await response.json();
+    const fetchPosts = async () => {
+        const response = await fetch("/api/db/posts");
+        const data = await response.json();
 
-        setAllPosts(postData);
+        setAllPosts(data);
     };
+
     useEffect(() => {
-        if (id) fetchPosts(id);
-    }, [id]);
+        fetchPosts();
+    }, []);
 
     const filterPosts = (searchtext) => {
         const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
@@ -46,7 +47,7 @@ const FeedByUser = ({ id }) => {
                 regex.test(item?.author?.username) ||
                 regex.test(item?.tag) ||
                 regex.test(item?.title) ||
-                regex.test(item?.body)
+                regex.test(item?.post)
         );
     };
 
@@ -97,4 +98,4 @@ const FeedByUser = ({ id }) => {
     );
 };
 
-export default FeedByUser;
+export default PostsFeed;

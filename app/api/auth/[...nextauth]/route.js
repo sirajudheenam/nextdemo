@@ -34,7 +34,6 @@ const handler = NextAuth({
 
                 // check if user already exists
                 const userExists = await User.findOne({ email: profile.email });
-
                 // if not, create a new document and save user in MongoDB
                 if (!userExists) {
                     await User.create({
@@ -44,7 +43,6 @@ const handler = NextAuth({
                         image: profile.picture,
                     });
                 }
-
                 return true;
             } catch (error) {
                 console.log("Error checking if user exists: ", error.message);

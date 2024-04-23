@@ -1,16 +1,15 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-
+import Loading from '@/components/Loading';
 import PostCard from "./PostCard";
 
 export const PostCardList = ({ data, handleTagClick }) => {
-    // data && console.log("data: ", data);
     return (
         data && (
             <div className='mt-16 post_layout'>
                 {data.map((post) => (
-                    <Suspense key={post._id}>
+                    <Suspense key={post._id} fallback={<Loading />} >
                         <PostCard
                             key={post._id}
                             post={post}
@@ -22,7 +21,7 @@ export const PostCardList = ({ data, handleTagClick }) => {
     );
 };
 
-const Feed = () => {
+const PostsFeed = () => {
     const [allPosts, setAllPosts] = useState([]);
 
     // Search states
@@ -31,7 +30,7 @@ const Feed = () => {
     const [searchedResults, setSearchedResults] = useState([]);
 
     const fetchPosts = async () => {
-        const response = await fetch("/api/post");
+        const response = await fetch("/api/db/posts");
         const data = await response.json();
 
         setAllPosts(data);
@@ -99,4 +98,4 @@ const Feed = () => {
     );
 };
 
-export default Feed;
+export default PostsFeed;

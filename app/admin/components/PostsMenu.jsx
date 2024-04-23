@@ -1,13 +1,11 @@
 'use client';
-
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 function PostsMenu() {
     const [postBulkData, setPostBulkData] = useState([]);
-    console.log("bulkPosts on :", postBulkData);
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
-    const router = useRouter();
+    //fetch data from JSONPlaceholder API
     const fetchJSONData = async function () {
         try {
             const response = await fetch('/api/json/posts');
@@ -16,8 +14,6 @@ function PostsMenu() {
             }
             const data = await response.json();
             setPostBulkData(data);
-            console.log("fetched JSON Data");
-            console.log(data);
         } catch (error) {
             console.error('Error seeding database:', error);
         }
@@ -26,7 +22,7 @@ function PostsMenu() {
 
     const insertBulkPosts = async function () {
         try {
-            const response = await fetch('/api/post', {
+            const response = await fetch('/api/db/posts', {
                 method: 'POST',
                 body: JSON.stringify({ postBulkData: postBulkData }),
             });
@@ -44,23 +40,30 @@ function PostsMenu() {
         }
     };
 
-    const deleteAllPosts = async function () {
+    const deleteAllPosts = () => {
+        // Open confirmation dialog
+        setIsConfirmationOpen(true);
+    };
+
+    const confirmDeleteAllPosts = async () => {
         try {
-            //TODO:
-            const response = await fetch('/api/post/deleteall', {
-                method: 'POST',
-            });
+            // make a fetch call to delete all posts
+            const response = await fetch('/api/db/posts');
             if (!response.ok) {
                 console.error('Failed to delete posts');
             }
             const data = await response.json();
-            console.log("After deleting Posts", data);// Database seeded successfully
-            if (response.ok) {
-                router.push("/admin/posts");
-            }
+            console.log("Deleting all posts...");
+            // Reset confirmation state
+            setIsConfirmationOpen(false);
         } catch (error) {
             console.error('Error deleting posts:', error);
         }
+    };
+
+    const cancelDeleteAllPosts = () => {
+        // Cancel deletion
+        setIsConfirmationOpen(false);
     };
 
     useEffect(() => {
@@ -83,6 +86,30 @@ function PostsMenu() {
                 >
                     Delete All Posts
                 </button>
+                {/* Confirmation Dialog */}
+                {isConfirmationOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <p className="text-lg font-semibold mb-4">Are you sure you want to delete all posts?</p>
+                            <div className="flex justify-center">
+                                <button
+                                    onClick={confirmDeleteAllPosts}
+                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-4"
+                                >
+                                    Yes, Delete All
+                                </button>
+                                <button
+                                    onClick={cancelDeleteAllPosts}
+                                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
             </div>
         </div>
     );

@@ -6,14 +6,16 @@ const Post = ({ post, onEdit, onDelete }) => {
     const [editing, setEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(post.title);
     const [editedBody, setEditedBody] = useState(post.body);
+    const [editedTag, setEditedTag] = useState(post.tag);
 
     const handleEdit = () => {
         setEditing(true);
     };
 
     const handleSave = () => {
+        // console.log(post._id, editedTitle, editedBody, editedTag);
         // Call onEdit function with updated post data
-        onEdit(post._id, editedTitle, editedBody);
+        onEdit(post._id, editedTitle, editedBody, editedTag);
         setEditing(false);
     };
 
@@ -47,9 +49,19 @@ const Post = ({ post, onEdit, onDelete }) => {
                 ) : (
                     <p className="text-gray-700">{post.body}</p>
                 )}
-                <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm mt-2">
-                    {post.tag}
-                </span>
+                {editing ? (
+                    <input
+                        className="border rounded-md p-2 w-full text_area"
+                        value={editedTag}
+                        placeholder="#Tags"
+                        onChange={(e) => setEditedTag(e.target.value)}
+                    />
+                ) : (
+                    <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm mt-2">
+                        {post.tag}
+                    </span>
+                )}
+
                 <div className="flex-end">
                     {editing ? (
                         <button
@@ -91,19 +103,19 @@ const PostsList = () => {
 
 
     const onEdit = async (id, newTitle, newBody, newTag) => {
-        console.log("onEdit id:", id, "NewTitle:", newTitle, "NewBody:", newBody);
+        // console.log("onEdit id:", id, "NewTitle:", newTitle, "NewBody:", newBody, "NewTag :", newTag);
+        const post = {
+            title: newTitle,
+            body: newBody,
+            tag: newTag
+        };
+
         try {
-            const response = await fetch(`/api/post/${id}`, {
+            const response = await fetch(`/api/db/posts/${id}`, {
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: newTitle,
-                    body: newBody,
-                    tag: newTag
-                }),
+                body: JSON.stringify(post),
             });
+            // console.log("response:", response);
             if (!response.ok) {
                 throw new Error("Failed to update post");
             }
@@ -121,7 +133,7 @@ const PostsList = () => {
     const onDelete = async (id) => {
         console.log("onDelete id:", id);
         try {
-            const response = await fetch(`/api/post/${id}`, {
+            const response = await fetch(`/api/db/posts/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -143,7 +155,7 @@ const PostsList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("/api/post");
+                const response = await fetch("/api/db/posts");
                 if (!response.ok) {
                     throw new Error("Failed to fetch post");
                 }

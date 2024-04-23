@@ -10,8 +10,6 @@ const User = ({ params }) => {
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
 
-
-
     useEffect(() => {
         const fetchUser = async () => {
             try {

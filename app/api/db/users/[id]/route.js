@@ -2,10 +2,7 @@ import User from "@/models/user";
 import { connectToDB } from "@/utils/database";
 
 export const GET = async (request, { params }) => {
-    console.log("request:", request);
-    console.log("params:", params);
     const { id } = params;
-    console.log("id:", id);
     try {
         await connectToDB();
         const user = await User.find({ _id: id }); // Fetch all users from the database

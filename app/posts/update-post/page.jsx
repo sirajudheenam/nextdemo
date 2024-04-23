@@ -47,7 +47,7 @@ const UpdatePost = () => {
             });
 
             if (response.ok) {
-                router.push("/");
+                router.push("/posts");
             }
         } catch (error) {
             console.log(error);

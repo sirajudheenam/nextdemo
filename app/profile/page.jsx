@@ -5,7 +5,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 
 import Profile from "@/components/Profile";
-import FeedByUser from "@/components/FeedByUser";
+import FeedByUser from "@/components/PostsFeedByUser";
 
 const MyProfile = () => {
     const router = useRouter();

@@ -1,21 +1,79 @@
 'use client';
 import { useEffect, useState } from 'react';
 import ConfirmationDialog from '@/app/admin/components/ConfirmationDialog';
+// import Notification from '@/app/admin/components/Notification';
 import { useSession } from 'next-auth/react';
+const { useRouter } = require('next/navigation');
+import useSWR from 'swr';
+
+import fetcher from '@/utils/fetcher';
+// See below TodosFromDB function to use with fetcher
+
+function Notification({ message }) {
+
+    const [notification, setNotification] = useState(null);
+
+    const showNotification = (message) => {
+        setNotification(message);
+        setTimeout(() => {
+            setNotification(null); // Clear the notification after 5 seconds (adjust as needed)
+        }, 5000); // 5000 milliseconds = 5 seconds
+    };
+
+    return (
+        notification !== null && (
+            <div className="bg-green-200 text-green-800 p-3 mb-4 rounded-md">
+                {notification}
+            </div>
+        )
+    );
+
+}
 
 export default function Page() {
     // const todosLocalStore = window?.localStorage?.getItem("todosLocal") ? JSON.parse(localStorage.getItem("todosLocal")) : null;
     // console.log("todosLocalStore", todosLocalStore);
 
     const { data: session } = useSession();
-
+    const router = useRouter();
     const [todosFromJSON, setTodosFromJSON] = useState([]);
     const [todosFromDB, setTodosFromDB] = useState([]);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [isFetchFirst, setIsFetchFirst] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState(null);
 
     const todosSizeinDB = todosFromDB.length;
     const todosFromDBEmpty = todosSizeinDB > 0 ? false : true;
+
+    const generateRandomTodos = (n) => {
+        const todos = [];
+        Array.from(Array(n).keys()).forEach((i) => {
+            todos.push({
+                title: `Todo ${i}`,
+                completed: true,
+                userId: i + 1,
+                executor: session?.user?.email
+            });
+        });
+        console.log("todos generated : ", todos);
+        return todos;
+    };
+
+    // const { jsonData, jsonDataError, mutateJsonData } = useSWR('/api/json/todos', fetcher);
+    // const refreshJSONData = async () => {
+    //     mutateJsonData(); // This will trigger a re-fetch of data
+    // };
+    // if (jsonDataError) {
+    //     setNotificationMessage(JSON.stringify(jsonDataError));
+    // }
+    // if (!jsonData) setIsLoading(true);
+    // if (jsonData) {
+    //     setTodosFromJSON(jsonData);
+    //     setIsLoading(false);
+    // }
+
+
 
     const fetchTodosFromJSON = async () => {
         try {
@@ -31,6 +89,29 @@ export default function Page() {
         }
     };
 
+    const seedTodosToDB = async () => {
+        const todos = generateRandomTodos(100);
+        // console.log("todos @ seedTodosToDB ", todos); 
+        try {
+            const resp = await fetch('/api/db/todos', {
+                method: 'POST',
+                body: JSON.stringify({ todos: todos }),
+            });
+            console.log("resp:", resp);
+            if (!resp.ok) {
+                throw new Error('Error seeding Todos to the database');
+            }
+            const data = await resp.json();
+            console.log("After seeding Todos Response", data);// Database seeded successfully
+            if (resp.ok) {
+                router.push("/admin/todos");
+            }
+        } catch (err) {
+            console.error('Error seeding Todos to the database:', err);
+            return { err: err.message };
+        }
+    };
+
     const fetchTodosFromDB = async () => {
 
         try {
@@ -42,50 +123,6 @@ export default function Page() {
             setTodosFromDB(resp);
         } catch (error) {
             console.error('Error fetching todos from DB:', error);
-        }
-    };
-
-    const seedTodosToDB = async () => {
-        // const todos = Array.from(todosFromJSON);
-
-        // todos.forEach(object => {
-        //     object.executor = session?.user?.email;
-        // });
-        // console.log("Todos to be seeded [updated]", todos);
-        const todos = [
-            {
-                title: "title",
-                completed: false,
-                userId: 1,
-                executor: session?.user?.email
-
-            }
-        ];
-        [1, 2, 4, 5, 6].forEach((i) => {
-            todos.push({
-                title: `title ${i}`,
-                completed: false,
-                userId: i,
-                executor: session?.user?.email
-            });
-        });
-        try {
-            const resp = await fetch('/api/db/todos', {
-                method: 'POST',
-                body: JSON.stringify({ todos: todos }),
-            });
-            console.log("resp:", resp);
-            if (!resp.ok) {
-                throw new Error('Error seeding Todos to the database');
-            }
-            const data = await response.json();
-            console.log("After seeding Todos Response", data);// Database seeded successfully
-            if (resp.ok) {
-                router.push("/admin/todos");
-            }
-        } catch (err) {
-            console.error('Error seeding Todos to the database:', err);
-            return { err: err.message };
         }
     };
 
@@ -128,6 +165,8 @@ export default function Page() {
 
     return (
         <>
+            {/* <TodosFromDB /> */}
+            <Notification message={notificationMessage} />
             <h1 className="text-3xl font-bold mb-4">ToDos Operations</h1>
             <div className="flex flex-row space-between max-w-lg mx-auto mt-8 mb-20">
 
@@ -191,11 +230,29 @@ export default function Page() {
                 <pre>{JSON.stringify(todosFromJSON, null, 2)}</pre>
             </div> */}
             {/* Raw JSON - todosFromDB */}
-            {/* <div className="max-w-lg mx-auto mt-8">
+            <div className="max-w-lg mx-auto mt-8">
                 <h2 className="text-2xl font-bold mb-4">Todos from DB</h2>
                 <pre>{JSON.stringify(todosFromDB, null, 2)}</pre>
-            </div> */}
+            </div>
         </>
 
     );
 }
+
+// function TodosFromDB() {
+//     const { data, error, mutate } = useSWR('/api/db/todos', fetcher);
+
+//     const refreshData = async () => {
+//         mutate(); // This will trigger a re-fetch of data
+//     };
+
+//     if (error) return <div>Error fetching data</div>;
+//     if (!data) return <div>Loading...</div>;
+
+//     return (
+//         <div>
+//             <pre>{JSON.stringify(data, null, 2)}</pre>
+//             <button onClick={refreshData}>Refresh Data</button>
+//         </div>
+//     );
+// }

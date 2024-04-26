@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 import PostsHome from "@/app/posts/page";
 import Loading from "@/components/Loading";
 import { Suspense } from "react";

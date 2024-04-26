@@ -4,6 +4,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useFormStatus } from "react-dom";
+
+import { updateUser } from "@/app/admin/actions.js";
 
 function User({ user }) {
 
@@ -23,13 +26,28 @@ function User({ user }) {
     );
 }
 
+function Submit({ label }) {
+    const status = useFormStatus();
+
+    return (
+        <button
+            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded 
+                ${status.pending ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={status.pending}
+        >
+            {label}
+        </button>
+    );
+}
 const UsersPage = () => {
     const [userList, setUserList] = useState([]);
+    const userId = "123";
+    const updateUserWithId = updateUser.bind(null, userId);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('/api/users');
+                const response = await fetch('/api/json/users');
                 const data = await response.json();
                 // console.log("data:", data);
                 setUserList(data);
@@ -58,6 +76,13 @@ const UsersPage = () => {
                     )))}
                 </ul>
             </div>
+            <form action={updateUserWithId}
+                className="bg-white bg-opacity-20 backdrop-filter 
+                    backdrop-blur-lg rounded-lg p-6 shadow-lg">
+                <input type="text" name="name" className="border-2 rounded m-4" />
+                <Submit label={"Update"} />
+            </form>
+            {/* {<div> Server Action Returned {updateUserWithId}</div>} */}
         </div >
     );
 };

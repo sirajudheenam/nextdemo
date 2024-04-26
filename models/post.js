@@ -16,6 +16,10 @@ const PostSchema = new Schema({
     tag: {
         type: String,
         required: [false, 'Tag is not required.'],
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required.'],
     }
 });
 

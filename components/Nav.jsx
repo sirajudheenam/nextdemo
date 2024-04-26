@@ -5,11 +5,15 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
+import { usePathname } from 'next/navigation';
+
 const Nav = () => {
     const { data: session } = useSession();
 
     const [providers, setProviders] = useState(null);
     const [toggleDropdown, setToggleDropdown] = useState(false);
+
+    const currentPath = usePathname();
 
     useEffect(() => {
         (async () => {
@@ -40,12 +44,28 @@ const Nav = () => {
             <div className='sm:flex hidden'>
                 {session?.user ? (
                     <div className='flex gap-3 md:gap-5'>
-                        <Link href='/todos/create-todo' className='black_btn'>
-                            Create Todo
-                        </Link>
-                        <Link href='/posts/create-post' className='black_btn'>
-                            Create Post
-                        </Link>
+
+                        {currentPath === '/posts' && (
+                            <Link href='/posts/create-post' className='black_btn'>
+                                Create Post
+                            </Link>
+                        )}
+                        {currentPath === '/todos' && (
+                            <Link href='/todos/create-todo' className='black_btn'>
+                                Create Todo
+                            </Link>
+                        )}
+                        {currentPath !== '/posts' && (
+                            <Link href='/posts' className='black_btn'>
+                                Posts
+                            </Link>
+                        )}
+                        {currentPath !== '/todos' && (
+                            <Link href='/todos' className='black_btn'>
+                                Todos
+                            </Link>
+                        )}
+
 
                         <button type='button' onClick={signOut} className='outline_btn'>
                             Sign Out
@@ -102,20 +122,43 @@ const Nav = () => {
                                 >
                                     My Profile
                                 </Link>
-                                <Link
-                                    href='/todos/create-post'
-                                    className='dropdown_link'
-                                    onClick={() => setToggleDropdown(false)}
-                                >
-                                    Create Post
-                                </Link>
-                                <Link
-                                    href='/todos/create-todo'
-                                    className='dropdown_link'
-                                    onClick={() => setToggleDropdown(false)}
-                                >
-                                    Create Todo
-                                </Link>
+
+                                {currentPath !== '/posts' && (
+                                    <Link href='/posts'
+                                        className='dropdown_link'
+                                        onClick={() => setToggleDropdown(false)}>
+                                        Posts
+                                    </Link>
+                                )}
+                                {currentPath !== '/todos' && (
+                                    <Link href='/todos'
+                                        className='dropdown_link'
+                                        onClick={() => setToggleDropdown(false)}
+                                    >
+                                        Todos
+                                    </Link>
+                                )}
+
+                                {currentPath === '/posts' && (
+                                    <Link
+                                        href='/posts/create-post'
+                                        className='dropdown_link'
+                                        onClick={() => setToggleDropdown(false)}
+                                    >
+                                        Create Post
+                                    </Link>
+                                )}
+
+                                {currentPath === '/todos' && (
+                                    <Link
+                                        href='/todos/create-todo'
+                                        className='dropdown_link'
+                                        onClick={() => setToggleDropdown(false)}
+                                    >
+                                        Create Todo
+                                    </Link>
+                                )}
+
                                 <button
                                     type='button'
                                     onClick={() => {

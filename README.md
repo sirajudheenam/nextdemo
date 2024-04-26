@@ -145,12 +145,17 @@ mongod --dbpath /path/to/dbdir --logpath /path/to/mongodb.log --fork
 
 TODO:
 
-- Add email and passwordless authentication based on JWT. eg., implement [this](https://www.makeuseof.com/token-authentication-nextjs-using-jwt/)
 - Once Session is created add the user to the User Table and use it.
 - Add Tests.
 - Create one DB for local Development and another one for production.
 - Enforce users to login first before allowing them to create posts or todos.
 
+IN PROGRESS:
+- Add email and passwordless authentication based on JWT. eg., implement [this](https://www.makeuseof.com/token-authentication-nextjs-using-jwt/)
+
+```bash
+pnpm add -D jose universal-cookie
+```
 
 
 

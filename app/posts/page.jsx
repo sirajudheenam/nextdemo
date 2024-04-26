@@ -2,10 +2,20 @@
 import PostsFeed from "@/components/PostsFeed";
 import Loading from "@/components/Loading";
 import { Suspense } from "react";
+import { useSession } from "next-auth/react";
 
 const PostsHome = () => {
+    const { data: session } = useSession();
+    // console.log("session:", session);
+    // const sampleGoogleSession = {
+    //     user: {
+    //         email: "user@gmail.com",
+    //         image: "https://lh3.googleusercontent.com/a/SHAHASH256",
+    //         name: "FirstName LastName",
+    //     }
+    // };
     return (
-        <section className='w-full flex-center flex-col'>
+        session ? (<section className='w-full flex-center flex-col' >
             <h1 className='head_text text-center'>
                 Beautiful Blog Posts
                 <br className='max-md:hidden' />
@@ -15,9 +25,9 @@ const PostsHome = () => {
                 Your thoughts are composed in a nice Blog Post
             </p>
             <Suspense fallback={<Loading />}>
-                <PostsFeed />
+                <PostsFeed session={session} />
             </Suspense>
-        </section>
+        </section >) : (<div>Please login</div>)
     );
 };
 

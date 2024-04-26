@@ -21,7 +21,7 @@ export const PostCardList = ({ data, handleTagClick }) => {
     );
 };
 
-const PostsFeed = () => {
+const PostsFeed = ({ session }) => {
     const [allPosts, setAllPosts] = useState([]);
 
     // Search states
@@ -29,7 +29,11 @@ const PostsFeed = () => {
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [searchedResults, setSearchedResults] = useState([]);
 
+    const currentUserEmail = session?.user?.email;
+    console.log("currentUserEmail", currentUserEmail);
+
     const fetchPosts = async () => {
+        // const response = await fetch(`/api/db/posts?email=${currentUserEmail}`);
         const response = await fetch("/api/db/posts");
         const data = await response.json();
 

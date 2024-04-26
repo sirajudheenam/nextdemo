@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyJwtToken } from "@/app/admin/lib/jwt_auth";
 
-const AUTH_PAGES = ["/admin/jwt/login"];
+// const AUTH_PAGES = ["/admin/jwt/login"];
+const AUTH_PAGES = ["/admin/jwt/protected"];
 
 const isAuthPages = (url) => AUTH_PAGES.some((page) => page.startsWith(url));
 

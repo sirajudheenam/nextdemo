@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from "next-auth/react";
 
 function TodosHome() {
     const [todos, setTodos] = useState([]);

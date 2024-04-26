@@ -4,10 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-
 import { usePathname } from 'next/navigation';
 
-const Nav = () => {
+
+const Nav = ({ darkMode, toggleDarkMode }) => {
     const { data: session } = useSession();
 
     const [providers, setProviders] = useState(null);
@@ -22,8 +22,32 @@ const Nav = () => {
         })();
     }, []);
 
+    const NavHeader = () => {
+        return (
+            <header header className="bg-gray-800 text-white py-4 sticky top-0 z-10" >
+                <div className="container mx-auto flex justify-between items-center">
+                    <h1 className="text-lg font-bold">My Next.js App</h1>
+                    {/* Dark mode toggle button */}
+                    <button onClick={toggleDarkMode} className="flex items-center">
+                        <span className="mr-2">Dark Mode</span>
+                        <div
+                            className={`w-12 h-6 bg-gray-400 rounded-full p-1 duration-300 ease-in-out ${darkMode ? 'bg-blue-600 translate-x-6' : 'bg-gray-200'
+                                }`}
+                        >
+                            <div
+                                className={`w-4 h-4 bg-white rounded-full shadow-md transform duration-300 ease-in-out ${darkMode ? 'translate-x-6' : 'translate-x-0'
+                                    }`}
+                            />
+                        </div>
+                    </button>
+                </div>
+            </header>
+        );
+    };
+
     return (
-        <nav className='flex-between w-full mb-16 pt-3'>
+
+        <nav className='flex-between w-full sticky mb-16 pt-3'>
             <Link href='/' className='flex gap-2 flex-center'>
                 {/* Image with src "/assets/images/logo.svg" was detected as the Largest Contentful Paint (LCP). Please add the "priority" property if this image is above the fold. */}
                 {/* Read more: https://nextjs.org/docs/api-reference/next/image#priority */}
@@ -66,7 +90,6 @@ const Nav = () => {
                             </Link>
                         )}
 
-
                         <button type='button' onClick={signOut} className='outline_btn'>
                             Sign Out
                         </button>
@@ -80,6 +103,23 @@ const Nav = () => {
                                 alt='profile'
                             />
                         </Link>
+                        {/* Include dark mode toggle button in the header */}
+                        {/* <button onClick={toggleDarkMode} className="text-orange-500">
+                            {darkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button> */}
+                        {/* Dark mode toggle button */}
+                        <button onClick={toggleDarkMode} className="flex items-center">
+                            <span className="mr-2 text-orange-500">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                            <div
+                                className={`w-12 h-6 bg-gray-400 rounded-full p-1 duration-300 ease-in-out ${darkMode ? 'bg-blue-600 translate-x-6' : 'bg-gray-200'
+                                    }`}
+                            >
+                                <div
+                                    className={`w-4 h-4 bg-white rounded-full shadow-md transform duration-300 ease-in-out ${darkMode ? 'translate-x-6' : 'translate-x-0'
+                                        }`}
+                                />
+                            </div>
+                        </button>
                     </div>
                 ) : (
                     <>

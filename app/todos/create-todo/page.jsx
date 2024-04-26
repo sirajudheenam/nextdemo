@@ -11,12 +11,6 @@ const CreateTodo = () => {
     const router = useRouter();
 
     const { data: session } = useSession();
-
-    console.log("session");
-    console.log(session);
-
-    console.log(session?.user?.email);
-    console.log('router', router);
     const [submitting, setIsSubmitting] = useState(false);
     const [isCompleted, setIsCompleted,] = useState(false);
 

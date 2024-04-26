@@ -50,12 +50,21 @@ const RootLayout = ({ children }) => {
         <footer className="bg-gray-800 text-white py-4 sticky bottom-0 z-10">
           <div className="container mx-auto text-center">
             {/* Footer content */}
-            © 2024 Copyrights reserved by TechnoTipsToday
+            © 2024 Copyrights reserved by TechnoTipsToday.
           </div>
         </footer>
-
+        {/* Global styles for dark/light mode */}
+        <style jsx global>{`
+        body {
+          background-color: ${darkMode ? '#333333' : '#FFFFFF'};
+          color: ${darkMode ? '#FFFFFF' : '#333333'};
+          transition: background-color 0.3s ease, color 0.3s ease;
+          margin-top: 56px; /* Adjust this value to accommodate the height of the sticky header */
+          padding-bottom: 56px; /* Adjust this value to accommodate the height of the sticky footer */
+        }
+      `}</style>
       </body>
-    </html>
+    </html >
   );
 };
 export default RootLayout;

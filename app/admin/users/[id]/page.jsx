@@ -13,7 +13,7 @@ const User = ({ params }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch(`/api/users/${id}`);
+                const response = await fetch(`/api/db/users/${id}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch user");
                 }

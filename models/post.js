@@ -1,9 +1,13 @@
 import { Schema, model, models } from 'mongoose';
 
 const PostSchema = new Schema({
+    // author: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User',
+    // },
     author: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
+        required: [false, 'author is required.'],
     },
     title: {
         type: String,
@@ -19,10 +23,10 @@ const PostSchema = new Schema({
     },
     email: {
         type: String,
-        required: [true, 'Email is required.'],
+        required: [false, 'Email is required.'],
     }
 });
-
+// console.log('models.Post:', models.Post);
 const Post = models.Post || model('Post', PostSchema);
-
+// console.log("Post:", Post);
 export default Post;

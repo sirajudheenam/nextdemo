@@ -3,16 +3,17 @@ import { useEffect, useState } from 'react';
 import ConfirmationDialog from '@/app/admin/components/ConfirmationDialog';
 // import Notification from '@/app/admin/components/Notification';
 import { useSession } from 'next-auth/react';
-const { useRouter } = require('next/navigation');
-import useSWR from 'swr';
+import { useRouter } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
+// import useSWR from 'swr';
+import { useColorSchemeStore } from '@/providers/color-scheme-store-provider';
 
-import fetcher from '@/utils/fetcher';
+// import fetcher from '@/utils/fetcher';
 // See below TodosFromDB function to use with fetcher
 
 function Notification({ message }) {
 
     const [notification, setNotification] = useState(null);
-
     const showNotification = (message) => {
         setNotification(message);
         setTimeout(() => {
@@ -42,7 +43,7 @@ export default function Page() {
     const [isFetchFirst, setIsFetchFirst] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState(null);
-
+    const { darkMode } = useColorSchemeStore((state) => state);
     const todosSizeinDB = todosFromDB.length;
     const todosFromDBEmpty = todosSizeinDB > 0 ? false : true;
 
@@ -104,7 +105,9 @@ export default function Page() {
             const data = await resp.json();
             console.log("After seeding Todos Response", data);// Database seeded successfully
             if (resp.ok) {
+                fetchTodosFromDB();
                 router.push("/admin/todos");
+                // revalidatePath("/admin/todos");
             }
         } catch (err) {
             console.error('Error seeding Todos to the database:', err);
@@ -162,7 +165,6 @@ export default function Page() {
         fetchTodosFromDB();
     }, []);
 
-
     return (
         <>
             {/* <TodosFromDB /> */}
@@ -210,7 +212,8 @@ export default function Page() {
                     labelFirstButton={"Yes, Delete All"}
                     labelSecondButton={"Cancel"}
                     handleClickFirst={confirmDeleteAllTodosFromDB}
-                    handleClickSecond={cancelDeleteAllTodosFromDB} />
+                    handleClickSecond={cancelDeleteAllTodosFromDB}
+                    darkMode={darkMode} />
             )}
             {/* todosFromJSON List  */}
             {/* <div className="max-w-lg mx-auto mt-8">

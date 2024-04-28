@@ -1,41 +1,56 @@
 import Post from "@/models/post";
 import { connectToDB } from "@/utils/database";
 
-export const revalidate = 0;
-
-export const GET = async (request) => {
+export async function GET(req, res) {
     try {
         await connectToDB();
-        // get all the posts and populate corresponding author from User table
-        const posts = await Post.find({}).populate('author');
+        const posts = await Post.find({});
+        // Post.bulkWrite([
+        //     {
+        //         insertOne: {
+        //             document: {
+        //                 title: "Post 1",
+        //                 body: "This is the body of Post 1",
+        //                 tag: "tag1",
+        //                 email: "user1@example.com"
+        //             }
+        //         }
+        //     }
+        // ]);
+        // const posts = await Post.find({}).populate('author');
+        // console.log("Posts from DB", posts);
         return new Response(JSON.stringify(posts), { status: 200 });
     } catch (error) {
-        return new Response("Failed to fetch all posts", { status: 500 });
+        return new Response(JSON.stringify({ error: 'Error Fetching Posts from the database' }), { status: 500 });
     }
-};
+}
 
-export const POST = async (req) => {
-    console.log("Request POST", req);
+export async function POST(req, res) {
+    console.log("Request", req);
+
     const { posts } = await req.json();
-    console.log("POSTs received in API", typeof posts);
+    console.log("posts received in API", posts);
+    // console.log("posts received in DB", posts);
+
     try {
         await connectToDB();
         await Post.insertMany(posts);
-        return new Response(JSON.stringify({ message: 'Posts seeded successfully' }), { status: 200 });
+        return new Response(JSON.stringify({ message: 'Posts are seeded successfully' }), { status: 200 });
 
     } catch (error) {
-        return new Response(JSON.stringify({ error: 'Error seeding Posts' }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Error POST Seeding Posts in the database' }), { status: 500 });
     }
-};
+}
 
-// Deletes every record of Posts from the database
-export const DELETE = async (req) => {
+export async function DELETE(req, res) {
+
     try {
-        await connectToDB();// Connect to MongoDB
-        // Delete
+        await connectToDB();
         await Post.deleteMany();
-        return new Response(JSON.stringify({ message: 'All Posts deleted successfully' }), { status: 200 });
+
+        return new Response(JSON.stringify({ message: 'Posts are deleted successfully' }), { status: 200 });
+
     } catch (error) {
-        return new Response(JSON.stringify({ error: 'Error deleting Posts' }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Error deleting Posts from the database' }), { status: 500 });
     }
-};
+}

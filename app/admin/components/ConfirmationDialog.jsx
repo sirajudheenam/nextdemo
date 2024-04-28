@@ -1,7 +1,16 @@
-export default function ConfirmationDialog({ dialogTitle, labelFirstButton, labelSecondButton, handleClickFirst, handleClickSecond }) {
+export default function ConfirmationDialog({ dialogTitle, labelFirstButton, labelSecondButton, handleClickFirst, handleClickSecond, darkMode }) {
+    // console.log('ConfirmationDialog rendered');
+    // console.log('dialogTitle', dialogTitle);
+    // console.log('labelFirstButton', labelFirstButton);
+    // console.log('labelSecondButton', labelSecondButton);
+    // console.log('handleClickFirst', handleClickFirst);
+    // console.log('handleClickSecond', handleClickSecond);
+    // console.log('darkMode', darkMode);
+
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <div className={`${darkMode ? 'bg-black' : 'bg-white'} p-6 rounded-lg shadow-lg text-center`}>
                 <p className="text-lg font-semibold mb-4"> {dialogTitle}</p>
                 <div className="flex justify-center">
                     <button

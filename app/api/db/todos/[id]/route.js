@@ -40,12 +40,13 @@ export const PATCH = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
     try {
+        const { id } = params;
         await connectToDB();
 
         // Find the Todo by ID and remove it
-        await Todo.findByIdAndDelete(params.id);
+        await Todo.findByIdAndDelete(id);
 
-        return new Response(`Todo with id # ${params.id} deleted successfully`, { status: 200 });
+        return new Response(`Todo with id # ${params.id} deleted successfully.`, { status: 200 });
     } catch (error) {
         return new Response("Error deleting Todo", { status: 500 });
     }

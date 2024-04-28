@@ -2,9 +2,12 @@
 // import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Nav from "@/components/Nav";
-import Provider from "@/components/Provider";
+import NextAuthSessionProvider from "@/components/NextAuthSessionProvider";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
+// import { CounterStoreProvider } from '@/providers/counter-store-provider';
+// import { CountStoreDemo } from "@/components/CountStoreDemo";
+import { ColorSchemeStoreProvider } from '@/providers/color-scheme-store-provider';
 
 // export const metadata = {
 //   title: "Next.js Demo by TechnoTipsToday",
@@ -13,34 +16,43 @@ import { useEffect, useState } from "react";
 
 const RootLayout = ({ children }) => {
   const router = useRouter();
-  const [darkMode, setDarkMode] = useState(false);
+  const [dark, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    setDarkMode(!dark);
   };
+
+  // const { darkMode, activateDarkMode } = useColorSchemeStore(
+  //   (state) => state,
+  // );
 
   useEffect(() => {
     const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(isDarkMode);
+    // activateDarkMode(isDarkMode);
   }, []);
 
   return (
     <html lang='en' suppressHydrationWarning={true}>
       <title>Next.js Demo by TechnoTipsToday</title>
       <body>
-
-        <Provider>
-          <div className={darkMode ? 'dark' : 'light'}>
-            <div className='main'>
-              <div className='gradient' />
+        <NextAuthSessionProvider>
+          <ColorSchemeStoreProvider>
+            {/* <CounterStoreProvider> */}
+            {/* <CountStoreDemo /> */}
+            <div className={`${dark} ? 'dark' : 'light'`}>
+              {/* <Nav dark={dark} toggleDarkMode={toggleDarkMode} /> */}
+              <div className='main'>
+                <div className='gradient' />
+              </div>
+              <Nav dark={dark} toggleDarkMode={toggleDarkMode} />
+              <main className='app container mx-auto py-6'>
+                {children}
+              </main>
             </div>
-
-            <main className='app container mx-auto py-6'>
-              <Nav darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-              {children}
-            </main>
-          </div>
-        </Provider>
+            {/* </CounterStoreProvider> */}
+          </ColorSchemeStoreProvider>
+        </NextAuthSessionProvider>
         {/* Footer Section */}
         {/* <footer className="bg-gray-800 text-white py-4 text-center"> */}
         {/* Footer content */}
@@ -56,11 +68,11 @@ const RootLayout = ({ children }) => {
         {/* Global styles for dark/light mode */}
         <style jsx global>{`
         body {
-          background-color: ${darkMode ? '#333333' : '#FFFFFF'};
-          color: ${darkMode ? '#FFFFFF' : '#333333'};
+          background-color: ${dark ? '#333333' : '#FFFFFF'};
+          color: ${dark ? '#FFFFFF' : '#333333'};
           transition: background-color 0.3s ease, color 0.3s ease;
-          margin-top: 56px; /* Adjust this value to accommodate the height of the sticky header */
-          padding-bottom: 56px; /* Adjust this value to accommodate the height of the sticky footer */
+          {/* margin-top: 56px; /* Adjust this value to accommodate the height of the sticky header */ */}
+          {/* padding-bottom: 56px; /* Adjust this value to accommodate the height of the sticky footer */ */}
         }
       `}</style>
       </body>

@@ -15,14 +15,12 @@ function TodosHome() {
     const handleDelete = (id) => {
 
         const fetchTodos = async () => {
-            const res = fetch(`/api/db/todos/${id}`, {
+            const res = await fetch(`/api/db/todos/${id}`, {
                 method: 'DELETE',
             });
-            console.log('res:', res);
             if (res.ok) {
-                console.log('Todo Deleted Successfully');
+                console.log(`todo with id ${id} deleted successfully`);
                 setTodos(todos.filter((t) => t._id !== id));
-                // router.push(`/todos`);
             } else {
                 console.log('Something is wrong babe ! Unable to delete');
             }

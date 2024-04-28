@@ -51,11 +51,3 @@ export async function deleteTodo(prevState: any, formData: FormData) {
         return { message: `Failed to add ${data.todo}.` };
     }
 }
-
-
-
-// export async function updateUser(userId, formData) {
-//     console.log("updateUser: ", userId, formData);
-
-//     return { appendedUser: `Hello, ${ userId } ` };
-// }

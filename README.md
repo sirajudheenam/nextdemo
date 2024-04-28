@@ -154,10 +154,37 @@ IN PROGRESS:
 - Add email and passwordless authentication based on JWT. eg., implement [this](https://www.makeuseof.com/token-authentication-nextjs-using-jwt/)
 
 ```bash
-pnpm add -D jose universal-cookie
+pnpm install jose universal-cookie zod
+
 ```
+### Routes
 
+|Route|Purpose|
+|---|---|
+| / | Authentication (Signin/Singout) |
+| /admin | Links & Cookies List|
+| /admin/posts | Bulk insert of posts in to DB |
+| /admin/todos |Bulk insert of todos in to DB  |
+| /admin| |
+| /admin | |
 
+### API Routes
+
+|Route|Method|Purpose|Status|
+|---|---|---|---|
+|/api/db/posts|GET|Get all posts from MongoDB||
+|/api/db/posts|POST|Get all posts from MongoDB|Error||
+|/api/db/posts/[id]|GET|Get post with `id` from MongoDB||
+|/api/db/posts/[id]|PATCH|Modify post with `id` from MongoDB||
+|/api/db/posts/[id]|DELETE|Delete post with `id` from MongoDB||
+|||||
+|/api/db/todos|GET|Get all todos from MongoDB||
+|||||
+|||||
+|||||
+| /admin/api/jwt/login | |||
+| /admin | |||
+ 
 
 
 

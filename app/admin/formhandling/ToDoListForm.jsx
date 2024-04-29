@@ -5,7 +5,6 @@ import { DeleteForm } from '@/app/admin/formhandling/DeleteForm';
 
 export default async function ToDoListForm() {
 
-    // console.log("ENV: ", process.env.POSTGRES_URL);
     let data = await sql`SELECT * FROM todos2`;
     const { rows: todos } = data;
 

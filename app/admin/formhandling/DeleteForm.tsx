@@ -3,9 +3,13 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { deleteTodo } from '@/app/admin/formhandling/actions'
 
-const initialState = {
-    message: null
+interface FormState {
+    message: string | null;
 }
+
+const initialState: FormState = {
+    message: null,
+};
 
 function DeleteButton() {
     const { pending } = useFormStatus()
@@ -21,7 +25,7 @@ function DeleteButton() {
     )
 }
 export function DeleteForm({ id, todo }: { id: number, todo: string }) {
-    const [state, formAction] = useFormState(deleteTodo, initialState);
+    const [state, formAction] = useFormState<FormState, FormData>(deleteTodo, initialState);
 
     return (
         <form action={formAction} className="max-w-md mx-auto mt-4 p-4 border border-gray-300 rounded shadow-lg">

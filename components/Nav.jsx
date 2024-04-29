@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { usePathname } from 'next/navigation';
-import { useColorSchemeStore } from '@/providers/color-scheme-store-provider';
+import { useGlobalStore } from '@/providers/global-store-provider';
 
 
 const Nav = ({ dark, toggleDarkMode }) => {
@@ -17,7 +17,7 @@ const Nav = ({ dark, toggleDarkMode }) => {
 
     const currentPath = usePathname();
 
-    const { darkMode, activateDarkMode } = useColorSchemeStore(
+    const { darkMode, activateDarkMode } = useGlobalStore(
         (state) => state,
     );
 

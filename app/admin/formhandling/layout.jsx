@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Link } from 'next/navigation';
-import SideMenu from '@/app/admin/formhandling/SideMenu';
+import SideMenu from '@/app/components/SideMenu';
 
 
 function Layout({ children }) {

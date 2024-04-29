@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 // import { CounterStoreProvider } from '@/providers/counter-store-provider';
 // import { CountStoreDemo } from "@/components/CountStoreDemo";
-import { ColorSchemeStoreProvider } from '@/providers/color-scheme-store-provider';
+import { GlobalStoreProvider } from '@/providers/global-store-provider';
 
 // export const metadata = {
 //   title: "Next.js Demo by TechnoTipsToday",
@@ -22,7 +22,7 @@ const RootLayout = ({ children }) => {
     setDarkMode(!dark);
   };
 
-  // const { darkMode, activateDarkMode } = useColorSchemeStore(
+  // const { darkMode, activateDarkMode } = useGlobalStore(
   //   (state) => state,
   // );
 
@@ -37,7 +37,7 @@ const RootLayout = ({ children }) => {
       <title>Next.js Demo by TechnoTipsToday</title>
       <body>
         <NextAuthSessionProvider>
-          <ColorSchemeStoreProvider>
+          <GlobalStoreProvider>
             {/* <CounterStoreProvider> */}
             {/* <CountStoreDemo /> */}
             <div className={`${dark} ? 'dark' : 'light'`}>
@@ -51,7 +51,7 @@ const RootLayout = ({ children }) => {
               </main>
             </div>
             {/* </CounterStoreProvider> */}
-          </ColorSchemeStoreProvider>
+          </GlobalStoreProvider>
         </NextAuthSessionProvider>
         {/* Footer Section */}
         {/* <footer className="bg-gray-800 text-white py-4 text-center"> */}

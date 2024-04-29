@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useColorSchemeStore } from '@/providers/color-scheme-store-provider';
+import { useGlobalStore } from '@/providers/global-store-provider';
 
 
 const SideMenu = ({ isOpen, onClose }) => {
-    const { darkMode } = useColorSchemeStore(
+    const { darkMode } = useGlobalStore(
         (state) => state,
     );
     return (

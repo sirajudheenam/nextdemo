@@ -4,9 +4,12 @@ import ConfirmationDialog from '@/app/admin/components/ConfirmationDialog';
 // import Notification from '@/app/admin/components/Notification';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+// import { revalidatePath, revalidateTag } from 'next/cache';
+// import { revalidateAdminTodos } from '@/app/admin/todos/action';
 // import useSWR from 'swr';
-import { useColorSchemeStore } from '@/providers/color-scheme-store-provider';
+import { useGlobalStore } from '@/providers/global-store-provider';
+import { ErrorBoundary } from 'next/dist/client/components/error-boundary';
+import Error from '@/app/admin/todos/error';
 
 // import fetcher from '@/utils/fetcher';
 // See below TodosFromDB function to use with fetcher
@@ -43,7 +46,7 @@ export default function Page() {
     const [isFetchFirst, setIsFetchFirst] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState(null);
-    const { darkMode } = useColorSchemeStore((state) => state);
+    const { darkMode } = useGlobalStore((state) => state);
     const todosSizeinDB = todosFromDB.length;
     const todosFromDBEmpty = todosSizeinDB > 0 ? false : true;
 
@@ -74,8 +77,6 @@ export default function Page() {
     //     setIsLoading(false);
     // }
 
-
-
     const fetchTodosFromJSON = async () => {
         try {
             const response = await fetch('/api/json/todos');
@@ -96,7 +97,7 @@ export default function Page() {
         try {
             const resp = await fetch('/api/db/todos', {
                 method: 'POST',
-                body: JSON.stringify({ todos: todos }),
+                body: JSON.stringify({ todos: todos })
             });
             console.log("resp:", resp);
             if (!resp.ok) {
@@ -106,7 +107,9 @@ export default function Page() {
             console.log("After seeding Todos Response", data);// Database seeded successfully
             if (resp.ok) {
                 fetchTodosFromDB();
-                router.push("/admin/todos");
+                // router.push("/admin/todos");
+                // revalidateAdminTodos();
+                // revalidateTag("adminTodos");
                 // revalidatePath("/admin/todos");
             }
         } catch (err) {
@@ -118,7 +121,9 @@ export default function Page() {
     const fetchTodosFromDB = async () => {
 
         try {
-            const response = await fetch('/api/db/todos'); // Assuming this is your custom API route
+            const response = await fetch('/api/db/todos', {
+                next: { tags: ["adminTodos"] }
+            }); // Assuming this is your custom API route
             if (!response.ok) {
                 throw new Error('Failed to fetch todos from DB');
             }
@@ -167,56 +172,57 @@ export default function Page() {
 
     return (
         <>
-            {/* <TodosFromDB /> */}
-            <Notification message={notificationMessage} />
-            <h1 className="text-3xl font-bold mb-4">ToDos Operations</h1>
-            <div className="flex flex-row space-between max-w-lg mx-auto mt-8 mb-20">
+            <ErrorBoundary fallback={<Error />} >
+                {/* <TodosFromDB /> */}
+                <Notification message={notificationMessage} />
+                <h1 className="text-3xl font-bold mb-4">ToDos Operations</h1>
+                <div className="flex flex-row space-between max-w-lg mx-auto mt-8 mb-20">
 
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
-                    onClick={fetchTodosFromJSON}
-                >
-                    Fetch All Todos from JSON
-                </button>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                        onClick={fetchTodosFromJSON}
+                    >
+                        Fetch All Todos from JSON
+                    </button>
 
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
-                    onClick={seedTodosToDB}
-                >
-                    Seed ToDos to DB
-                </button>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                        onClick={seedTodosToDB}
+                    >
+                        Seed ToDos to DB
+                    </button>
 
-                <button
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
-                    onClick={fetchTodosFromDB}
-                >
-                    Fetch All ToDos from DB
-                </button>
+                    <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
+                        onClick={fetchTodosFromDB}
+                    >
+                        Fetch All ToDos from DB
+                    </button>
 
-                <button
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={deleteAllTodosFromDB}
-                >
-                    Delete All Todos from DB
-                </button>
-            </div>
-            {/* Total ToDos in DB */}
-            <div >
-                <h2 className="text-2xl font-bold mt-8">Total Todos in DB: {todosSizeinDB}</h2>
-            </div>
+                    <button
+                        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={deleteAllTodosFromDB}
+                    >
+                        Delete All Todos from DB
+                    </button>
+                </div>
+                {/* Total ToDos in DB */}
+                <div >
+                    <h2 className="text-2xl font-bold mt-8">Total Todos in DB: {todosSizeinDB}</h2>
+                </div>
 
-            {/* Confirmation Dialog */}
-            {isDeleteConfirmationOpen && (
-                <ConfirmationDialog
-                    dialogTitle={"Are you sure you want to delete all todos?"}
-                    labelFirstButton={"Yes, Delete All"}
-                    labelSecondButton={"Cancel"}
-                    handleClickFirst={confirmDeleteAllTodosFromDB}
-                    handleClickSecond={cancelDeleteAllTodosFromDB}
-                    darkMode={darkMode} />
-            )}
-            {/* todosFromJSON List  */}
-            {/* <div className="max-w-lg mx-auto mt-8">
+                {/* Confirmation Dialog */}
+                {isDeleteConfirmationOpen && (
+                    <ConfirmationDialog
+                        dialogTitle={"Are you sure you want to delete all todos?"}
+                        labelFirstButton={"Yes, Delete All"}
+                        labelSecondButton={"Cancel"}
+                        handleClickFirst={confirmDeleteAllTodosFromDB}
+                        handleClickSecond={cancelDeleteAllTodosFromDB}
+                        darkMode={darkMode} />
+                )}
+                {/* todosFromJSON List  */}
+                {/* <div className="max-w-lg mx-auto mt-8">
                 <h2 className="text-2xl font-bold mb-4">Todos List from JSON</h2>
                 <ul>
                     {todosFromJSON.map((todo) => (
@@ -227,16 +233,17 @@ export default function Page() {
                 </ul>
             </div> */}
 
-            {/* Raw JSON - todosFromJSON */}
-            {/* <div className="max-w-lg mx-auto mt-8">
+                {/* Raw JSON - todosFromJSON */}
+                {/* <div className="max-w-lg mx-auto mt-8">
                 <h2 className="text-2xl font-bold mb-4">Todos from JSON</h2>
                 <pre>{JSON.stringify(todosFromJSON, null, 2)}</pre>
             </div> */}
-            {/* Raw JSON - todosFromDB */}
-            <div className="max-w-lg mx-auto mt-8">
-                <h2 className="text-2xl font-bold mb-4">Todos from DB</h2>
-                <pre>{JSON.stringify(todosFromDB, null, 2)}</pre>
-            </div>
+                {/* Raw JSON - todosFromDB */}
+                <div className="max-w-lg mx-auto mt-8">
+                    <h2 className="text-2xl font-bold mb-4">Todos from DB</h2>
+                    <pre>{JSON.stringify(todosFromDB, null, 2)}</pre>
+                </div>
+            </ErrorBoundary>
         </>
 
     );

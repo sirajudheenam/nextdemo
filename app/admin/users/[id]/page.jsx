@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const User = ({ params }) => {
     const { data: session } = useSession();
@@ -39,10 +40,12 @@ const User = ({ params }) => {
                     ) : (
                         <div className="flex items-center space-x-4">
                             {user[0]?.image && (
-                                <img
+                                <Image
                                     src={user[0]?.image}
                                     alt="User Image"
                                     className="w-16 h-16 rounded-full"
+                                    height={16}
+                                    width={16}
                                 />
                             )}
                             <div>

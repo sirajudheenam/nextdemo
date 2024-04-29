@@ -3,9 +3,16 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { createTodo } from '@/app/admin/formhandling/actions'
 
-const initialState = {
-    message: null
+interface FormState {
+    message: string | null;
 }
+
+// const initialState = {
+//     message: null
+// }
+const initialState: FormState = {
+    message: null,
+};
 
 function SubmitButton() {
     const { pending } = useFormStatus()
@@ -22,7 +29,7 @@ function SubmitButton() {
     )
 }
 export function AddForm() {
-    const [state, formAction] = useFormState(createTodo, initialState);
+    const [state, formAction] = useFormState<FormState, FormData>(createTodo, initialState);
 
     return (
         <>

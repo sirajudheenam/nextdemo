@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 import Profile from "@/components/Profile";
 import FeedByUser from "@/components/PostsFeedByUser";
 
@@ -54,7 +54,7 @@ const MyProfile = () => {
                     <li className="text-lg font-semibold">Name: {session?.user?.name}</li>
                     <li>ID: {session?.id}</li>
                     <li>Email: {session?.user?.email}</li>
-                    <li>Image: {session?.user?.image ? <img src={session?.user?.image} className="w-20 h-20 rounded-full" alt="User Image" /> : 'No image'}</li>
+                    <li>Image: {session?.user?.image ? <Image src={session?.user?.image} className="w-20 h-20 rounded-full" alt="User Image" height={20} width={20} /> : 'No image'}</li>
                     <li>Expires: {session?.expires}</li>
                     <li>Authenticated (session status): <span className={status === 'authenticated' ? 'text-green-600' : 'text-red-600'}>{status === 'authenticated' ? 'yes' : 'no'}</span></li>
                 </ul>

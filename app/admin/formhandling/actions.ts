@@ -3,13 +3,18 @@ import { revalidatePath } from "next/cache";
 import { sql } from "@vercel/postgres";
 import { z } from "zod";
 
+interface FormState {
+    message: string | null;
+}
+
+
 // Create the table todos2 directly on Vercel Query console ;
 // CREATE TABLE todo2s(id SERIAL PRIMARY KEY, text TEXT NOT NULL) IF NOT EXISTS;
 // export async function createTable() {
 //     sql`CREATE TABLE todos2(id SERIAL PRIMARY KEY, text TEXT NOT NULL) IF NOT EXISTS;`
 //     return { message: `Table created` };
 // }
-export async function createTodo(prevState: any, formData: FormData) {
+export async function createTodo(prevState: FormState, formData: FormData) {
     const schema = z.object({
         todo: z.string().nonempty(),
     })

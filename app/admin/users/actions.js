@@ -4,7 +4,7 @@ export async function updateUser(userId, formData) {
 }
 
 export async function getUsersFromJSON() {
-    const res = await fetch('http://localhost:3000/api/json/users');
+    const res = await fetch('/api/json/users');
     // The return value is *not* serialized
     // You can return Date, Map, Set, etc.
 
@@ -17,7 +17,7 @@ export async function getUsersFromJSON() {
 }
 
 export async function getUsersFromDB() {
-    const res = await fetch('http://localhost:3000/api/db/users');
+    const res = await fetch('/api/db/users');
     // The return value is *not* serialized
     // You can return Date, Map, Set, etc.
 

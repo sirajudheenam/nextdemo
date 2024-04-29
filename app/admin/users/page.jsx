@@ -1,15 +1,29 @@
-
-import { getUsersFromJSON, getUsersFromDB } from '@/app/admin/users/actions';
+'use client';
 import UserOperations from '@/app/admin/users/UserOperations';
+import { useState, useEffect } from 'react';
 
-export default async function Page(req) {
-    const jsonUserData = await getUsersFromJSON();
-    const dbUserData = await getUsersFromDB();
+const fetchData = async (url) => {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(`Error fetching data from ${url} : `, error);
+    }
+};
 
+export default function Page() {
+    const [jsonUserData, setJSONUserData] = useState([]);
+    const [dbUserData, setDBUserData] = useState([]);
+
+    useEffect(() => {
+        fetchData('/api/json/users').then(data => setJSONUserData(data));
+        fetchData('/api/db/users').then(data => setDBUserData(data));
+    }, []);
     return <main>
         <UserOperations users={jsonUserData} />
-        {/* <h1>Users from JSON</h1>
-        <pre>{JSON.stringify(jsonUserData, null, 2)}</pre> */}
+        <h1>Users from JSON</h1>
+        <pre>{JSON.stringify(jsonUserData, null, 2)}</pre>
         <h1>Users from DB</h1>
         <pre>{JSON.stringify(dbUserData, null, 2)}</pre>
     </main >;
